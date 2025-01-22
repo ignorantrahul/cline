@@ -30,7 +30,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 	totalCost,
 	onClose,
 }) => {
-	const { apiConfiguration, currentTaskItem, checkpointTrackerErrorMessage } = useExtensionState()
+	const { apiConfiguration, currentTaskItem, checkpointTrackerErrorMessage, isLoggedIn } = useExtensionState()
 	const [isTaskExpanded, setIsTaskExpanded] = useState(true)
 	const [isTextExpanded, setIsTextExpanded] = useState(false)
 	const [showSeeMore, setShowSeeMore] = useState(false)
@@ -179,9 +179,22 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 							${totalCost?.toFixed(4)}
 						</div>
 					)}
-					<VSCodeButton appearance="icon" onClick={onClose} style={{ marginLeft: 6, flexShrink: 0 }}>
-						<span className="codicon codicon-close"></span>
-					</VSCodeButton>
+					<div style={{ display: "flex", gap: "4px", flexShrink: 0 }}>
+						<VSCodeButton 
+							appearance="icon" 
+							style={{ marginLeft: 6 }}
+							onClick={() => vscode.postMessage({ type: "accountButtonClicked" })}>
+							<span 
+								className={`codicon codicon-account ${isLoggedIn ? "logged-in" : ""}`}
+								style={{ 
+									color: isLoggedIn ? "var(--vscode-textLink-foreground)" : undefined 
+								}}
+							></span>
+						</VSCodeButton>
+						<VSCodeButton appearance="icon" onClick={onClose}>
+							<span className="codicon codicon-close"></span>
+						</VSCodeButton>
+					</div>
 				</div>
 				{isTaskExpanded && (
 					<>
